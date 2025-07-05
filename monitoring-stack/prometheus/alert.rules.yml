@@ -1,0 +1,54 @@
+# prometheus/alert.rules.yml
+groups:
+  - name: NodeExporterAlerts
+    rules:
+      # Alert for high CPU usage
+      - alert: HighCpuUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 1m # Changed to 1 minute
+        labels:
+          severity: critical
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage on {{ $labels.instance }} has been above 85% for the last 1 minute. Current usage: {{ $value | humanize }}%."
+
+      # Alert for high Memory usage
+      - alert: HighMemoryUsage
+        expr: 100 - ((node_memory_MemAvailable_bytes{job="node_exporter"} / node_memory_MemTotal_bytes{job="node_exporter"}) * 100) > 85
+        for: 1m # Changed to 1 minute
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage on {{ $labels.instance }} has been above 85% for the last 1 minute. Current usage: {{ $value | humanize }}%."
+
+      # Alert for high Disk usage
+      - alert: HighDiskUsage
+        expr: 100 - (node_filesystem_avail_bytes{job="node_exporter", fstype!="tmpfs"} / node_filesystem_size_bytes{job="node_exporter", fstype!="tmpfs"} * 100) > 90
+        for: 1m # Changed to 1 minute
+        labels:
+          severity: critical
+        annotations:
+          summary: "High disk usage on {{ $labels.instance }} ({{ $labels.mountpoint }})"
+          description: "Disk usage on {{ $labels.instance }} mountpoint {{ $labels.mountpoint }} is above 90% for the last 1 minute. Current usage: {{ $value | humanize }}%."
+
+      # Optional: Alert if Node Exporter is down
+      - alert: NodeExporterDown
+        expr: up{job="node_exporter"} == 0
+        for: 1m # This was already 1 minute
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node Exporter on {{ $labels.instance }} is down"
+          description: "Node Exporter on {{ $labels.instance }} is not reachable."
+
+  - name: ApplicationUptimeAlerts # NEW GROUP ADDED HERE
+    rules:
+      - alert: ApplicationDown
+        expr: probe_success{job="blackbox_app_http"} == 0
+        for: 1m # Alert if application is down for 1 minute
+        labels:
+          severity: critical
+        annotations:
+          summary: "Application {{ $labels.instance }} is down"
+          description: "The application at {{ $labels.instance }} is not reachable or did not return a 2xx status code."

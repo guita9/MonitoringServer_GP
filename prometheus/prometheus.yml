@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 15s # How frequently to scrape targets
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090'] # Prometheus scrapes its own metrics
+
+  - job_name: 'node_exporter'
+    # Replace 'YOUR_NODE_EXPORTER_IP' with the actual IP address or hostname
+    # of the server where Node Exporter is running.
+    # The default port for Node Exporter is 9100.
+    static_configs:
+      - targets: ['10.0.2.140:9100']

@@ -1,0 +1,15 @@
+# blackbox/blackbox.yml
+modules:
+  # HTTP probe for your CRUD application
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      # Optionally, follow redirects
+      # follow_redirects: true
+      # Optionally, specify expected HTTP status codes (e.g., [200, 201])
+      # valid_status_codes: [] # Default is 2xx, so usually not needed for basic check
+      # Optionally, check for specific content in the response body
+      # preferred_ip_protocol: ip4 # or ip6
+      # valid_utf8_regex:
+      #   - "Your Application is Running"

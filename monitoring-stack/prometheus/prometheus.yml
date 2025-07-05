@@ -1,0 +1,37 @@
+# prometheus/prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "/etc/prometheus/alert.rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['18.208.141.241:9100']
+
+  - job_name: 'blackbox_app_http' # New job for your application's HTTP uptime
+    metrics_path: /probe
+    params:
+      module: [http_2xx] # This refers to the module defined in blackbox/blackbox.yml
+    static_configs:
+      # Replace 'http://YOUR_APP_IP:YOUR_APP_PORT' with the actual URL of your CRUD app
+      # Example: 'http://192.168.1.50:8080' or 'http://mycrudapp.com/'
+      - targets: ['http://18.208.141.241:8000/docs']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox_exporter:9115 # This tells Prometheus to scrape Blackbox Exporter

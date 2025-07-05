@@ -1,0 +1,22 @@
+# alertmanager/alertmanager.yml
+global:
+  smtp_smarthost: 'mail.obci.com:587'
+  smtp_from: 'sanjaymaharjan@obci.com' # The sender email address
+  smtp_auth_username: 'sanjaymaharjan@obci.com' # Your SMTP username (often the email itself)
+  smtp_auth_password: 'Nepal1234########' # Your SMTP password
+  smtp_require_tls: true
+
+route:
+  # All alerts go to the 'default-receiver' by default
+  receiver: 'default-receiver'
+  group_by: ['alertname', 'instance'] # Group alerts by their name and the affected instance
+  group_wait: 30s # Wait 30 seconds for more alerts to come in before sending initial notification
+  group_interval: 5m # Wait 5 minutes between sending new notifications for the same group
+  repeat_interval: 4h # Repeat notifications every 4 hours for long-firing alerts
+
+receivers:
+  - name: 'default-receiver'
+    email_configs:
+      - to: 'accessworldtec@gmail.com' # The email address that will receive alerts
+        send_resolved: true # Send a "resolved" notification when the alert clears
+
