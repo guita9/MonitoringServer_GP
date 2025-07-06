@@ -1,4 +1,4 @@
-# [Your Application/Project Name] - Monitoring Stack
+# [CRUD APP/ MonitoringServer_GP] - Monitoring Stack
 
 This repository contains a comprehensive monitoring stack for your applications and infrastructure, built using **Prometheus**, **Alertmanager**, **Blackbox Exporter**, and **Grafana**, all orchestrated with **Docker Compose**.
 
