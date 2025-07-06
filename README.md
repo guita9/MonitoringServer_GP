@@ -154,11 +154,4 @@ To monitor your external CRUD application (or any HTTP endpoint), ensure:
 * **Firewall Rules:** Ensure necessary ports (9090, 9093, 9115, 3000, and your application's port like 8000) are open on your host machine and any cloud security groups if applicable.
 * **SMTP Configuration:** Double-check your `alertmanager.yml` for correct SMTP server, port, username, and password. Test sending a manual email from the server running Docker to confirm outbound connectivity.
 
-## Contributing
-
-Feel free to open issues or submit pull requests for any improvements or bug fixes.
-
-## License
-
-This project is open-source and available under the [MIT License](LICENSE)
 
